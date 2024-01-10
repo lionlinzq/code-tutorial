@@ -18,6 +18,8 @@
 
     <modules>
         <module>algo</module>
+        <module>utils</module>
+        <module>springboot</module>
     </modules>
 
     <properties>
