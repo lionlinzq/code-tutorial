@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>${spring-boot.version}</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>pers.lionlinzq</groupId>
     <artifactId>code-tutorial</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>code-tutorial</name>
     <description>我的个人代码汇总仓库</description>
@@ -20,45 +20,142 @@
         <module>algo</module>
         <module>utils</module>
         <module>springboot</module>
+        <module>base</module>
     </modules>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>8</java.version>
+        <revision>1.0.0-SNAPSHOT</revision>
+        <spring-boot.version>2.7.6</spring-boot.version>
+        <lombok.version>1.18.24</lombok.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>2.7.6</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.junit.vintage</groupId>
+                        <artifactId>junit-vintage-engine</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>pers.lionlinzq</groupId>
+                <artifactId>base</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+
+            <!-- 日志相关依赖 -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>4.9.10</version>
+                    <executions>
+                        <execution>
+                            <id>get-the-git-infos</id>
+                            <!-- 默认绑定阶段initialize -->
+                            <phase>initialize</phase>
+                            <goals>
+                                <!-- 目标：revision -->
+                                <goal>revision</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!-- 检查的仓库根目录，${project.basedir}：项目根目录，即包含pom.xml文件的目录 -->
+                        <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                        <!-- false：扫描路径时不打印更多信息，默认值false，可以不配置 -->
+                        <verbose>false</verbose>
+                        <!-- 定义插件中所有时间格式，默认值：yyyy-MM-dd’T’HH:mm:ssZ -->
+                        <dateFormat>yyyy-MM-dd HH:mm:ss</dateFormat>
+                        <!-- git属性文件中各属性前缀，默认值git，可以不配置 -->
+                        <prefix>git</prefix>
+                        <!-- 生成git属性文件，默认false：不生成 -->
+                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                        <!-- 生成git属性文件路径及文件名，默认${project.build.outputDirectory}/git.properties -->
+                        <generateGitPropertiesFilename>${project.build.outputDirectory}/git.json
+                        </generateGitPropertiesFilename>
+                        <!-- 生成git属性文件格式，默认值properties -->
+                        <format>json</format>
+                        <!-- 配置git-describe命令 -->
+                        <gitDescribe>
+                            <skip>false</skip>
+                            <always>false</always>
+                            <dirty>-dirty</dirty>
+                        </gitDescribe>
+                        <includeOnlyProperties>
+                            <includeOnlyProperty>git.branch</includeOnlyProperty>
+                            <includeOnlyProperty>git.commit.id</includeOnlyProperty>
+                            <includeOnlyProperty>git.build.version</includeOnlyProperty>
+                            <includeOnlyProperty>git.closest.tag.name</includeOnlyProperty>
+                            <includeOnlyProperty>git.commit.message.full</includeOnlyProperty>
+                            <includeOnlyProperty>git.commit.time</includeOnlyProperty>
+                            <includeOnlyProperty>git.build.time</includeOnlyProperty>
+                        </includeOnlyProperties>
+                    </configuration>
+                </plugin>
+                <!-- 其他插件配置 -->
+            </plugins>
+        </pluginManagement>
+
     </build>
 
 </project>
