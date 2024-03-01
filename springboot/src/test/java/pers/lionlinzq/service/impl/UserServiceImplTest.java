@@ -1,50 +1,35 @@
 package pers.lionlinzq.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pers.lionlinzq.Application;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pers.lionlinzq.domain.User;
+import pers.lionlinzq.mapper.UserMapper;
 
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
+class UserServiceImplTest {
 
-@Slf4j
-@SpringBootTest(classes = Application.class) // 启动类
-@ExtendWith(SpringExtension.class)
-public class UserServiceImplTest {
+    @Mock
+    private UserMapper mockUserMapper;
 
-    @Autowired
+    @InjectMocks
     private UserServiceImpl userServiceImplUnderTest;
 
     @Test
-    public void testList1() {
-        // Setup
-        final Wrapper<User> queryWrapper = null;
-        final User user = new User();
-        user.setId(0L);
-        user.setName("name");
-        user.setAge(0);
-        user.setEmail("email");
-        final List<User> expectedResult = Arrays.asList(user);
-
-        // Run the test
-        final List<User> result = userServiceImplUnderTest.list(queryWrapper);
-
-        // Verify the results
-        assertEquals(expectedResult, result);
-    }
-
-    @Test
-    public void testList2() {
-        List<User> list = userServiceImplUnderTest.list();
-        log.info("查询数据是:{}", list);
+    void testAddUser() {
+        User user = new User();
+        user.setName("zhangsan");
+        user.setAge(18);
+        user.setId(new Random().nextLong());
+        userServiceImplUnderTest.addUser(user);
     }
 }

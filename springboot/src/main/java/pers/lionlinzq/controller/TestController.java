@@ -1,12 +1,13 @@
 package pers.lionlinzq.controller;
 
-import cn.monitor4all.logRecord.annotation.OperationLog;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pers.lionlinzq.domain.User;
 import pers.lionlinzq.service.UserService;
+
+import java.time.LocalDateTime;
+import java.util.Random;
 
 /**
  * 测试控制器
@@ -14,18 +15,29 @@ import pers.lionlinzq.service.UserService;
  * @author lin
  * @date 2024/02/26
  */
-@RestController("/testController")
+@RestController
+@Slf4j
+@RequestMapping("/testController")
 public class TestController {
 
     @Autowired
     UserService userService;
 
 
-    @OperationLog(bizId = "#user.id", bizType = "'保存'")
-    @PostMapping("/testSave")
-    public void testSave(@RequestBody User user) {
-        userService.save(user);
-        System.out.println("testSave");
+    @GetMapping("/testSave")
+    public void testSave() {
+        User user = new User();
+        Random random = new Random();
+        boolean flag = random.nextBoolean();
+        if (flag){
+            user.setId(random.nextLong());
+        }
+        user.setName(random.nextInt() + "张三");
+        user.setAge(random.nextInt(50));
+        user.setEmail(random.nextInt() + "zhangsan@qq.com");
+        user.setCreateTime(LocalDateTime.now());
+        log.info("接受用户参数:{}", user);
+        userService.addUser(user);
     }
 
 }

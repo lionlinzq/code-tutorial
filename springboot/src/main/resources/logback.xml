@@ -8,7 +8,7 @@
         <!-- 彩色日志 -->
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %d{yyyy-MM-dd HH:mm:ss} [%thread] %magenta(%-5level) %green([%-50.50class]) >>> %cyan(%msg) %n
+                %d{yyyy-MM-dd HH:mm:ss}|%thread|%magenta(%-5level)|%green([%-50.50class])|%cyan(%msg) %n
             </pattern>
         </layout>
     </appender>

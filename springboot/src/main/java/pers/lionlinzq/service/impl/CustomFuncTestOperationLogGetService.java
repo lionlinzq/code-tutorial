@@ -1,10 +1,10 @@
 package pers.lionlinzq.service.impl;
 
-import cn.monitor4all.logRecord.bean.LogDTO;
-import cn.monitor4all.logRecord.service.IOperationLogGetService;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import pers.lionlinzq.bean.LogDTO;
+import pers.lionlinzq.service.IOperationLogGetService;
 
 /**
  * @author lin
@@ -15,6 +15,7 @@ public class CustomFuncTestOperationLogGetService implements IOperationLogGetSer
     @Override
     public boolean createLog(LogDTO logDTO) {
         log.info("logDTO: [{}]", JSON.toJSONString(logDTO));
+        log.info("logDTO: [{}]", logDTO.getBizType());
         return true;
     }
 }

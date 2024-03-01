@@ -4,8 +4,10 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import pers.lionlinzq.utils.LocalDateTimeConverter;
+import lombok.NoArgsConstructor;
+import pers.lionlinzq.annotation.LogRecordDiffObject;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,6 +17,9 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "user")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@LogRecordDiffObject(alias = "用户信息实体")
 public class User implements Serializable {
     /**
      * 主键ID
@@ -43,7 +48,7 @@ public class User implements Serializable {
     /**
      * 创建时间
      */
-    @ExcelProperty(value = "创建时间", converter = LocalDateTimeConverter.class)
+    @ExcelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
     @TableField(exist = false)

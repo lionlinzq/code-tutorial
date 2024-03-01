@@ -10,4 +10,7 @@ import pers.lionlinzq.domain.User;
  */
 public interface UserService extends IService<User> {
 
+
+    void addUser(User user);
+
 }

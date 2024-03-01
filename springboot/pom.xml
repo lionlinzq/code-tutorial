@@ -62,12 +62,6 @@
             <version>4.8</version>
         </dependency>
 
-        <dependency>
-            <groupId>cn.monitor4all</groupId>
-            <artifactId>log-record-starter</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-
         <!-- 操作excel的依赖 -->
         <dependency>
             <groupId>org.apache.poi</groupId>

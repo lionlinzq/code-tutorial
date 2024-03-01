@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://8.tcp.cpolar.top:12359/framework?serverTimezone=UTC
+    url: jdbc:mysql://9.tcp.cpolar.top:11240/framework?serverTimezone=UTC
     username: root
     password: 9527
 
@@ -14,3 +14,5 @@ spring:
 #    auto-refresh: true
 #    # 针对配置项同名的情况，是否允许 nacos 的配置覆盖本地的配置
 #    remote-first: true
+log-record:
+  diff-msg-format: 【${_fieldName}】变化：【${_oldValue}】->【${_newValue}】
