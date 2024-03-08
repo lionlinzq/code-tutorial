@@ -20,6 +20,9 @@ import java.util.Random;
 @RequestMapping("/testController")
 public class TestController {
 
+
+    public int testNum = 0;
+
     @Autowired
     UserService userService;
 
@@ -38,6 +41,16 @@ public class TestController {
         user.setCreateTime(LocalDateTime.now());
         log.info("接受用户参数:{}", user);
         userService.addUser(user);
+    }
+
+    @GetMapping("/getTestNum")
+    public int getTestNum(){
+        return ++testNum;
+    }
+
+    @GetMapping("/getTestNum2")
+    public int getTestNum2(){
+        return ++testNum;
     }
 
 }

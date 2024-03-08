@@ -25,9 +25,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Autowired
     private UserMapper userMapper;
 
-
-    @OperationLog(condition = "#user.id != null",bizId = "#user.id",bizType = "'修改用户'",msg = "#_DIFF(#oldUser, #user)")
-    @OperationLog(condition = "#user.id == null",bizId = "#user.id",bizType = "'新增用户'",msg = "'新增用户'")
     @Override
     public void addUser(User user) {
         if (user.getId() == null) {
