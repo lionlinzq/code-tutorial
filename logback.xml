@@ -6,11 +6,11 @@
     <!-- 控制台输出 -->
     <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
         <!-- 彩色日志 -->
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>
                 %d{yyyy-MM-dd HH:mm:ss} [%thread] %magenta(%-5level) %green([%-50.50class]) >>> %cyan(%msg) %n
             </pattern>
-        </layout>
+        </encoder>
     </appender>
 
     <!-- 按照每天生成日志文件 -->
@@ -36,4 +36,6 @@
         <appender-ref ref="fileLog"/>
     </root>
 
+    <!-- 禁用初始化日志 -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 </configuration>
