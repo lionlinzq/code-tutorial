@@ -60,7 +60,7 @@ public class P7_ReverseInteger {
         System.out.println(2147483412);
         System.out.println("2143847412");
         // System.out.println(Math.pow(2,31));
-        // System.out.println(Integer.MAX_VALUE);
+        System.out.println(Integer.MAX_VALUE);
         System.out.println(Integer.MIN_VALUE);
     }
 
@@ -70,6 +70,8 @@ public class P7_ReverseInteger {
         public int reverse(int x) {
             int ans = 0;
             while (x != 0) {
+                // 小于2^31的10位数，首位只能是1或2，反转过来末位是1或2，小于7。如果大于7，输入就溢出了。
+                // 所以不用考虑末位的7和-8，只要保证其余9位满足条件就行。
                 if (ans < Integer.MIN_VALUE / 10 || ans > Integer.MAX_VALUE / 10) {
                     return 0;
                 }

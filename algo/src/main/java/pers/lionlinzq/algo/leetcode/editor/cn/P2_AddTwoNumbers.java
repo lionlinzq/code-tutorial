@@ -56,7 +56,6 @@ public class P2_AddTwoNumbers{
 	public static void main(String[] args) {
 	 	//测试代码
 	 	Solution solution = new P2_AddTwoNumbers().new Solution();
-	 	solution.
 	}
 	 
 //力扣代码
