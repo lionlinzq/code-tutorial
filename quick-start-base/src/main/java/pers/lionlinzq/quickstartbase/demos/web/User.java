@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pers.lionlinzq.quickstartbase.demos.web;
+package pers.lionlinzq.excel.entity.demos.web;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>

@@ -73,7 +73,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>pers.lionlinzq.quickstartbase.QuickStartBaseApplication</mainClass>
+                    <mainClass>pers.lionlinzq.excel.entity.QuickStartBaseApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pers.lionlinzq.quickstartbase.demos.web;
+package pers.lionlinzq.excel.entity.demos.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
