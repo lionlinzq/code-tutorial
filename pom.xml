@@ -19,6 +19,7 @@
     <modules>
         <module>algo</module>
         <module>springboot-import-export</module>
+        <module>tiny-demo</module>
     </modules>
 
     <properties>
