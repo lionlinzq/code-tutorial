@@ -1,6 +1,7 @@
 package limiter;
 
 import java.time.LocalTime;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RateLimiterSimpleWindow {
