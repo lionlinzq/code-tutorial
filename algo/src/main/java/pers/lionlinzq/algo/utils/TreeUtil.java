@@ -1,123 +1,149 @@
 package pers.lionlinzq.algo.utils;
 
-import pers.lionlinzq.algo.base.TreeNode;
+import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-
-/**
- * 树工具类
- *
- * @author lin
- * @date 2024/03/20
- */
 public class TreeUtil {
 
-    /**
-     * 数组构建树节点
-     *
-     * @param array 阵列
-     * @return {@link TreeNode}
-     */
-    public static TreeNode ArrayBuildTreeNode(int[] array){
-        return createTreeHelper(array, 0);
+    public static <T> Tree<T> buildTree(T first, List<T> children, Function<T, String> getKey, Function<T, String> getParentKey) {
+        return buildTree(first, children, getKey, getParentKey, false);
     }
 
-    /**
-     * 创建树辅助对象
-     *
-     * @param array 阵列
-     * @param index 指数
-     * @return {@link TreeNode}
-     */
-    public static TreeNode createTreeHelper(int[] array, int index){
-        if (index >= array.length){
-            return null;
+    public static <T> Tree<T> buildTree(T first, List<T> children, Function<T, String> getKey, Function<T, String> getParentKey, boolean ignoreCheckParentNodeNotExists) {
+
+        Map<String, Node<T>> nodeMap = new LinkedHashMap<>();
+        Node<T> firstNode = null;
+        if(first != null){
+            String parentKey = getKey.apply(first);
+            Assert.hasLength(parentKey, "节点key不能为空");
+            firstNode = new Node<>(first);
+            nodeMap.put(parentKey, firstNode);
         }
-        TreeNode cur = new TreeNode(array[index]);
-        cur.left = createTreeHelper(array, 2 * index + 1);
-        cur.right = createTreeHelper(array, 2 * index + 2);
-        return cur;
-    }
-
-    /**
-     * 获取树高
-     *
-     * @param treeNode 树节点
-     * @return int 树的高度
-     */
-    public static int getHeightOfTree(TreeNode treeNode){
-        return getHeightOfTreeHelper(treeNode);
-    }
-
-    /**
-     * 获取树高度辅助方法
-     *
-     * @param treeNode 树节点
-     * @return int
-     */
-    public static int getHeightOfTreeHelper(TreeNode treeNode){
-        if (treeNode == null){
-            return 0;
+        for (T child : children) {
+            Assert.hasLength(getKey.apply(child), "节点key不能为空");
+            Assert.isTrue(nodeMap.put(getKey.apply(child), new Node<>(child)) == null, "节点" + getKey.apply(child) + "重复");
         }
-        return 1 + Math.max(getHeightOfTreeHelper(treeNode.left),getHeightOfTreeHelper(treeNode.right));
+        for(Node<T> node : nodeMap.values()){
+            String parentKey = getParentKey.apply(node.getData());
+            if(StringUtils.isNotEmpty(parentKey)){
+                Node<T> parentNode = nodeMap.get(parentKey);
+                if(!ignoreCheckParentNodeNotExists){
+                    Assert.notNull(parentNode, "节点" + getKey.apply(node.getData()) + "的父节点" + getParentKey.apply(node.getData()) + "不存在");
+                }
+                if(parentNode != null){
+                    parentNode.addChild(node);
+                    node.setParent(parentNode);
+                }
+            }else if(firstNode != null && node != firstNode){
+                firstNode.addChild(node);
+                node.setParent(firstNode);
+            }
+
+        }
+        return new Tree(nodeMap.values());
     }
 
     /**
-     * 分层遍历
-     *
-     * @param treeNode 树节点
-     */
-    public static void hierarchicalTraversal(TreeNode treeNode){
-
+     * 转树结构
+     * @Author: lijuntao
+     * @Date: 2023/8/21
+     **/
+    public static <T extends TreeData> List<TreeData> toTreeData(T treeData, List<T> dataListList, boolean ignoreCheckParentNodeNotExists){
+        Tree<T> tree = TreeUtil.buildTree(treeData, dataListList, T::getKey, T::getParentKey, ignoreCheckParentNodeNotExists);
+        tree.forEachConsumerParentAndChild((p, c) -> {
+            List<TreeData> children = p.getChildren();
+            children = children == null? new ArrayList<>(): children;
+            children.add(c);
+            p.setChildren(children);
+        });
+        return tree.getRoots().stream().map(Node::getData).collect(Collectors.toList());
     }
 
-    public static void printTree(TreeNode treeNode){
-        int heightOfTree = getHeightOfTree(treeNode);
-        ArrayList<String> trees = new ArrayList<>();
-        TreeNode cur = treeNode;
-        for (int i = heightOfTree - 1; i >= 0; i--) {
-            StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(String.valueOf(' ').repeat(2 * i));
-            stringBuffer.append(cur.val);
-            trees.add(stringBuffer.toString());
-        }
-        for (String s: trees){
-            System.out.println(s);
-        }
-    }
+    public static class Tree<T> {
 
-    /**
-     * 树还原为数组
-     *
-     * @param treeNode 树节点
-     * @return {@link int[]}
-     */
-    public static List<Integer> Tree2Array(TreeNode treeNode){
-        if (treeNode == null){
+        private Collection<Node<T>> nodeList;
+
+        public Tree(Collection<Node<T>> nodeList) {
+            this.nodeList = nodeList;
+        }
+
+
+
+        public List<Node<T>> getRoots() {
+            List<Node<T>> roots = new ArrayList<>();
+            if(nodeList != null){
+                for (Node<T> node : nodeList) {
+                    if (node.getParent() == null) {
+                        roots.add(node);
+                    }
+                }
+            }
+            return roots;
+        }
+
+        public List<T> getDataList(){
+            if(nodeList != null){
+                return nodeList.stream().map(Node::getData).collect(Collectors.toList());
+            }
             return new ArrayList<>();
         }
 
-        List<Integer> resList = new ArrayList<>();
-        helper(treeNode, resList);
-        System.out.println(resList);
-        return resList;
+        public void forEachConsumerParentAndChild(BiConsumer<T, T> consumer){
+            List<Node<T>> roots = getRoots();
+            for (Node<T> root : roots) {
+                recursive(root, consumer);
+            }
+        }
+
+        private void recursive(Node<T> node, BiConsumer<T, T> consumer){
+            if(node != null){
+                consumer.accept(Optional.ofNullable(node.getParent()).map(Node::getData).orElse(null), node.getData());
+                List<Node<T>> children = node.getChildren();
+                if(children != null){
+                    for (Node<T> child : children) {
+                        recursive(child, consumer);
+                    }
+                }
+            }
+        }
+
     }
 
-    private static void helper(TreeNode treeNode, List<Integer> resList) {
-        if (treeNode != null){
-            resList.add(treeNode.val);
-            helper(treeNode.left, resList);
-            helper(treeNode.right, resList);
+    public static interface TreeData {
+        String getKey();
+        String getParentKey();
+        List<TreeData> getChildren();
+        void setChildren(List<TreeData> children);
+    }
+
+    @Data
+    public static class Node<T>{
+        private Node<T> parent;
+        private T data;
+        private List<Node<T>> children;
+
+        public Node() {
+        }
+
+        public Node(@NotNull T data) {
+            if(data == null){
+                throw new RuntimeException("data can not be null");
+            }
+            this.data = data;
+        }
+
+        public void addChild(Node<T> node) {
+            if(children == null){
+                children = new ArrayList<>();
+            }
+            children.add(node);
         }
     }
-
-
-    public static void main(String[] args) {
-        TreeNode treeNode = TreeUtil.ArrayBuildTreeNode(new int[]{1, 2, 3, 4, 5,6,7,8});
-        System.out.println(getHeightOfTree(treeNode));
-        Tree2Array(treeNode);
-    }
-
 }
