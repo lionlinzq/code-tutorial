@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xuanwu.apaas.core.domain.TenantDB">
+
+    <resultMap id="tenantDB" type="com.xuanwu.apaas.core.domain.TenantDB">
+        <id column="tenantdbcode" jdbcType="BIGINT" property="tenantdbcode"/>
+        <result column="tenantcode" jdbcType="BIGINT" property="tenantcode"/>
+        <result column="ip" jdbcType="VARCHAR" property="ip"/>
+        <result column="port" jdbcType="INTEGER" property="port"/>
+        <result column="connstr" jdbcType="VARCHAR" property="connstr"/>
+        <result column="tenantdbname" jdbcType="VARCHAR" property="tenantdbname"/>
+        <result column="tenantdbtype" jdbcType="INTEGER" property="tenantdbtype"/>
+        <result column="productcode" jdbcType="BIGINT" property="productcode"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <sql id="baseColumn">
+        tenantdbcode, tenantcode, ip, port, connstr, tenantdbname, tenantdbtype, productcode, status
+    </sql>
+
+
+    <select id="selectTenant" parameterType="java.util.Map" resultMap="tenantDB">
+        select * from tenantdb
+        where tenantcode = #{tenantcode,jdbcType=BIGINT}
+        and tenantdbtype= #{tenantdbtype,jdbcType=BIGINT}
+        and productcode = #{productcode,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectReportTenant" parameterType="java.util.Map" resultMap="tenantDB">
+        select * from tenantdb
+        where tenantcode =#{tenantcode,jdbcType=BIGINT}
+        and tenantdbcode= #{tenantdbcode,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectTenant2" parameterType="java.util.Map" resultMap="tenantDB">
+        select * from tenantdb
+        where tenantcode = #{tenantcode,jdbcType=BIGINT}
+        <if test="tenantdbtype != null">
+            and tenantdbtype= #{tenantdbtype,jdbcType=BIGINT}
+        </if>
+        <if test="productcode != null">
+            and productcode = #{productcode,jdbcType=BIGINT}
+        </if>
+        <if test="tenantDbName != null">
+            and tenantDbName = #{tenantDbName,jdbcType=VARCHAR}
+        </if>
+        and status = 1
+    </select>
+
+</mapper>

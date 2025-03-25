@@ -1,4 +1,4 @@
-package pers.lionlinzq.excel.entity.
+package pers.lionlinzq.quickstartbase;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

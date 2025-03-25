@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xuanwu.apaas.core.domain.TenantSetting">
+
+    <resultMap id="tenantSetting" type="com.xuanwu.apaas.core.domain.TenantSetting">
+        <id column="tenantsettingcode" jdbcType="BIGINT" property="tenantSettingCode"/>
+        <result column="tenantcode" jdbcType="BIGINT" property="tenantCode"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+    </resultMap>
+
+    <select id="selectTenantSetting" parameterType="Long" resultMap="tenantSetting">
+        SELECT tenantsettingcode, tenantcode, content
+        FROM tenantsetting
+        WHERE tenantcode = #{tenantCode}
+        LIMIT 1
+    </select>
+
+    <select id="listTenantSetting" parameterType="Long" resultMap="tenantSetting">
+        SELECT tenantsettingcode, tenantcode, content
+        FROM tenantsetting
+    </select>
+
+</mapper>

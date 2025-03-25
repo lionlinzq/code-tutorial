@@ -29,6 +29,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>commons</artifactId>
+            <version>5.8.7</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
@@ -38,10 +44,32 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>4.6</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -74,7 +102,7 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>pers.lionlinzq.excel.entity.QuickStartBaseApplication</mainClass>
-                    <skip>true</skip>
+                    <!--                    <skip>true</skip>-->
                 </configuration>
                 <executions>
                     <execution>

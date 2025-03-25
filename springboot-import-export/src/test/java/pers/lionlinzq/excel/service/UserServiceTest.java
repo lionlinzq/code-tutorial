@@ -1,19 +1,22 @@
 package pers.lionlinzq.excel.service;
 
+import com.github.javafaker.Faker;
+import com.github.yitter.idgen.YitIdHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pers.lionlinzq.excel.entity.User;
+import pers.lionlinzq.excel.entity.Users;
 import pers.lionlinzq.excel.repository.UserRepository;
-import pers.lionlinzq.excel.service.UserService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Locale;
 
 @Slf4j
 @SpringBootTest
@@ -25,50 +28,118 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository; // 使用真实的 UserRepository
 
-    private User testUser;
-
-    @BeforeEach
-    void setUp() {
-        // 清空数据库以确保干净的状态
-        userRepository.deleteAll();
-
-        List<User> users = Arrays.asList(
-                new User(1L, "alice01", "alice@example.com", "1234567890", "password123", "ACTIVE", LocalDateTime.now().minusDays(10)),
-                new User(2L, "bob_smith", "bob@example.com", "0987654321", "password456", "INACTIVE", LocalDateTime.now().minusDays(8)),
-                new User(3L, "charlie_wang", "charlie@example.com", "1122334455", "mySecret789", "ACTIVE", LocalDateTime.now().minusDays(6)),
-                new User(4L, "diana_lee", "diana@example.com", "2233445566", "helloWorld2024", "SUSPENDED", LocalDateTime.now().minusDays(5)),
-                new User(5L, "edward_jones", "edward@example.com", "3344556677", "edwardPass", "ACTIVE", LocalDateTime.now().minusDays(4)),
-                new User(6L, "fiona_brown", "fiona@example.com", "4455667788", "secure123", "INACTIVE", LocalDateTime.now().minusDays(3)),
-                new User(7L, "george_miller", "george@example.com", "5566778899", "george123", "ACTIVE", LocalDateTime.now().minusDays(2)),
-                new User(8L, "hannah_white", "hannah@example.com", "6677889900", "passHannah", "SUSPENDED", LocalDateTime.now().minusDays(1)),
-                new User(9L, "ian_clark", "ian@example.com", "7788990011", "ianClark007", "ACTIVE", LocalDateTime.now()),
-                new User(10L, "julia_king", "julia@example.com", "8899001122", "juliasPass!", "INACTIVE", LocalDateTime.now().plusDays(1))
-        );
-
-        // 保存这些用户数据
-        userRepository.saveAll(users);
-    }
 
     @Test
-    void testCreateAndRetrieveUser() {
-        // 保存用户
-        User createdUser = userService.createUser(testUser);
-        assertThat(createdUser).isNotNull();
-        assertThat(createdUser.getId()).isNotNull(); // 检查自动生成的 ID
-        assertThat(createdUser.getUsername()).isEqualTo("realUser");
-
-        // 检索所有用户并验证
-        List<User> users = userService.getAllUsers();
-        assertThat(users.size()).isEqualTo(1);
-        assertThat(users.get(0).getUsername()).isEqualTo("realUser");
-    }
-
-    @Test
-    public void testQuery(){
+    public void testQuery() {
 
         User alice01 = userRepository.findByUsernameAndPassword("ian_clark", "ian@example.com");
-        log.info("user:{}",alice01);
+        log.info("user:{}", alice01);
     }
 
+    @Test
+    public void test() {
+        Faker faker = new Faker(Locale.CHINA);
+        List<User> userList = new ArrayList<>();
+        // 记录构建实体的开始时间
+        long entityStartTime = System.currentTimeMillis();
+        LocalDate startDate = LocalDate.of(2019, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 12, 1);
+
+        for (int i = 0; i < 1000; i++) {
+            User user = new User();
+            user.setId(YitIdHelper.nextId());
+            String name = faker.name().name();
+            user.setUsername(name);
+            user.setPassword(faker.internet().password());
+            user.setEmail(faker.internet().safeEmailAddress(name+faker.random().hex()));
+            user.setPhone(faker.phoneNumber().cellPhone());
+            user.setStatus(faker.random().nextInt(3));
+
+            // 生成随机日期
+            LocalDateTime randomDate = faker.date().between(
+                    Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            ).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            user.setCreatedAt(randomDate);
+            user.setAddress(faker.address().fullAddress());
+            userList.add(user);
+        }
+
+        // 记录构建实体的结束时间
+        long entityEndTime = System.currentTimeMillis();  // 或者使用 Instant.now()
+
+        // 计算构建实体的耗时
+        long entityDuration = entityEndTime - entityStartTime;
+        log.info("构建实体耗时: {} 毫秒", entityDuration);
+
+        // 记录插入操作的开始时间
+        long startTime = System.currentTimeMillis();  // 或者使用 Instant.now()
+
+        // 执行批量插入
+        userService.batchSave(userList);
+
+        // 记录插入操作的结束时间
+        long endTime = System.currentTimeMillis();  // 或者使用 Instant.now()
+
+        // 计算并打印插入操作的耗时
+        long duration = endTime - startTime;
+        log.info("插入操作耗时: {} 毫秒", duration);
+    }
+
+    @Autowired
+    UsersService usersService;
+
+    @Test
+    public void testSaveUserByMp() {
+        Faker faker = new Faker(Locale.CHINA);
+        List<Users> userList = new ArrayList<>();
+        log.info("执行前数据量:{}",usersService.count());
+        // 记录构建实体的开始时间
+        long entityStartTime = System.currentTimeMillis();
+        LocalDate startDate = LocalDate.of(2019, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 12, 1);
+
+        for (int i = 0; i < 1000; i++) {
+            Users user = new Users();
+            user.setId(YitIdHelper.nextId());
+            String name = faker.name().name();
+            user.setUsername(name);
+            user.setPassword(faker.internet().password());
+            user.setEmail(faker.internet().safeEmailAddress(name+faker.random().hex()));
+            user.setPhone(faker.phoneNumber().cellPhone());
+            user.setStatus(faker.random().nextInt(3));
+
+            // 生成随机日期
+            LocalDateTime randomDate = faker.date().between(
+                    Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            ).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            user.setCreatedAt(randomDate);
+            user.setAddress(faker.address().fullAddress());
+            userList.add(user);
+        }
+
+        // 记录构建实体的结束时间
+        long entityEndTime = System.currentTimeMillis();  // 或者使用 Instant.now()
+
+        // 计算构建实体的耗时
+        long entityDuration = entityEndTime - entityStartTime;
+        log.info("构建实体耗时: {} 毫秒", entityDuration);
+
+        // 记录插入操作的开始时间
+        long startTime = System.currentTimeMillis();  // 或者使用 Instant.now()
+
+        // 执行批量插入
+        usersService.saveBatch(userList);
+
+        // 记录插入操作的结束时间
+        long endTime = System.currentTimeMillis();  // 或者使用 Instant.now()
+
+        // 计算并打印插入操作的耗时
+        long duration = endTime - startTime;
+        log.info("插入操作耗时: {} 毫秒", duration);
+
+        log.info("执行后数据量:{}",usersService.count());
+    }
 
 }

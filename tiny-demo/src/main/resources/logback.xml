@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN">
+    <property name="LOG_PATTERN"
+              value="%d %p %c{15} [%t] [%X{traceid}]-[%X{tecode}]-[%X{username}]-[%X{poname}] %m%n"></property>
+    <property name="FILE_LOG_PATTERN"
+              value="%d %p %c{15} [%t] [%X{traceid}]-[%X{tecode}]-[%X{username}]-[%X{poname}] %replace(%msg){'[\n\r]',''}%n" >
+    </property>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="LogInfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>logs/info.log</File>
+        <append>true</append>
+        <!--过滤器,只打INFO级别的日志及以上-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/info.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder charset="UTF-8">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="LogDebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>logs/debug.log</File>
+        <append>true</append>
+        <!--过滤器,只打debug级别的日志及以上-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/debug.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder charset="UTF-8">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="LogErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>logs/error.log</File>
+        <append>true</append>
+        <!--过滤器,只打ERROR级别的日志及以上-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/error.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder charset="UTF-8">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+    <logger name="org.springframework" level="INFO"></logger>
+    <logger name="org.mybatis" level="INFO"></logger>
+    <logger name="org.apache.http" level="INFO"></logger>
+
+    <root level="debug">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="LogDebugFile"/>
+        <appender-ref ref="LogInfoFile"/>
+        <appender-ref ref="LogErrorFile"/>
+    </root>
+
+</configuration>

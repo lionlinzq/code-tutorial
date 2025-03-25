@@ -1,4 +1,4 @@
-/*
+package pers.lionlinzq.quickstartbase.demos.web;/*
  * Copyright 2013-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-package pers.lionlinzq.excel.entity.demos.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

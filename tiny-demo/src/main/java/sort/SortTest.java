@@ -11,8 +11,10 @@ public class SortTest {
         SelectionSort selectionSort = new SelectionSort();
         InsertionSort insertionSort = new InsertionSort();
         QuickSort quickSort = new QuickSort();
+        HeapSort heapSort = new HeapSort();
         // System.out.println(Arrays.toString(insertionSort.Sort(array2)));
         System.out.println(Arrays.toString(quickSort.Sort(array)));
+        System.out.println(Arrays.toString(heapSort.Sort(array)));
 
     }
 }

@@ -92,7 +92,7 @@ public class ExportUtils {
                     .password(row.getCell(cols++).getStringCellValue())
                     .email(row.getCell(cols++).getStringCellValue())
                     .phone(row.getCell(cols++).getStringCellValue())
-                    .status(row.getCell(cols++).getStringCellValue())
+                    .status((int) row.getCell(cols++).getNumericCellValue())
                     .createdAt(LocalDateTime.parse(row.getCell(cols++).getStringCellValue(),formatter))
                     .build();
 
