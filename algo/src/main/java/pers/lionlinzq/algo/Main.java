@@ -1,7 +1,6 @@
 package pers.lionlinzq.algo;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -43,6 +42,5 @@ public class Main {
 
     public static void convert(String string) {
         // "[[0,1],[1,2],[1,3],[1,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[9,12],[10,11]]",解析生成对应的数组
-        JSONArray objects = JSON.parseArray("[[0,1],[1,2],[1,3],[1,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[9,12],[10,11]]");
     }
 }
