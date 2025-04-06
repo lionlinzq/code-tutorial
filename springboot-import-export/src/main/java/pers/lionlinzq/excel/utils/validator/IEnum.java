@@ -1,4 +1,4 @@
-package pers.lionlinzq.algo.utils.validator;
+package pers.lionlinzq.excel.utils.validator;
 
 public interface IEnum<T> {
 

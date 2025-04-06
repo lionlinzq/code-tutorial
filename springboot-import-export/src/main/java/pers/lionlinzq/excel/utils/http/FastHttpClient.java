@@ -2,7 +2,7 @@
  * Copyright (c) 2015 by XuanWu Wireless Technology Co.Ltd. 
  *             All rights reserved                         
  */
-package pers.lionlinzq.algo.utils.http;
+package pers.lionlinzq.excel.utils.http;
 
 
 import okhttp3.OkHttpClient;
